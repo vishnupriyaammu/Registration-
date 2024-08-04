@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Course {
+    private String courseCode;
+    private String title;
+    private String description;
+    private int capacity;
+    private String schedule;
+    private List<Student> enrolledStudents;
+
+    public Course(String courseCode, String title, String description, int capacity, String schedule) {
+        this.courseCode = courseCode;
+        this.title = title;
+        this.description = description;
+        this.capacity = capacity;
+        this.schedule = schedule;
+        this.enrolledStudents = new ArrayList<>();
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public List<Student> getEnrolledStudents() {
+        return enrolledStudents;
+    }
+
+    public void enrollStudent(Student student) {
+        if (enrolledStudents.size() < capacity) {
+            enrolledStudents.add(student);
+            System.out.println(student.getName() + " has been enrolled in " + title);
+        } else {
+            System.out.println("Sorry, " + title + " is already at full capacity");
+        }
+    }
+
+    public void removeStudent(Student student) {
+        enrolledStudents.remove(student);
+        System.out.println(student.getName() + " has been removed from " + title);
+    }
+}
+
+class Student {
+    private int studentId;
+    private String name;
+    private List<Course> registeredCourses;
+
+    public Student(int studentId, String name) {
+        this.studentId = studentId;
+        this.name = name;
+        this.registeredCourses = new ArrayList<>();
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Course> getRegisteredCourses() {
+        return registeredCourses;
+    }
+
+    public void registerCourse(Course course) {
+        registeredCourses.add(course);
+        course.enrollStudent(this);
+    }
+
+    public void dropCourse(Course course) {
+        registeredCourses.remove(course);
+        course.removeStudent(this);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Course javaCourse = new Course("CS101", "Java Programming", "Introduction to Java programming", 20, "Mon/Wed 10:00 AM - 12:00 PM");
+        Course pythonCourse = new Course("CS102", "Python Programming", "Introduction to Python programming", 15, "Tue/Thu 2:00 PM - 4:00 PM");
+
+        Student student1 = new Student(1, "Alice");
+        Student student2 = new Student(2, "Bob");
+
+        javaCourse.enrollStudent(student1);
+        pythonCourse.enrollStudent(student2);
+
+        student1.registerCourse(javaCourse);
+        student2.registerCourse(pythonCourse);
+
+        System.out.println("Courses after enrollment:");
+        System.out.println("Java Course Enrolled Students: " + javaCourse.getEnrolledStudents().size());
+        System.out.println("Python Course Enrolled Students: " + pythonCourse.getEnrolledStudents().size());
+
+        student1.dropCourse(javaCourse);
+        
+        System.out.println("Courses after dropping:");
+        System.out.println("Java Course Enrolled Students: " + javaCourse.getEnrolledStudents().size());
+        System.out.println("Python Course Enrolled Students: " + pythonCourse.getEnrolledStudents().size());
+    }
+}
